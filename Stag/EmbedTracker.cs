@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Stag
+{
+    class EmbedTracker
+    {
+        public int currX, currY, nxtColorVal, nextBit;
+        private int numBitsToUse; 
+        private int maxX;
+        private int maxY; 
+
+        //nextColorVal: 
+        // 0 - R
+        // 1 - G
+        // 2 - B
+        public EmbedTracker(int startX, int startY, int inMaxX, int inMaxY, int inNumToUse)
+        {
+            currX = startX;
+            currY = startY;
+            maxX = inMaxX;
+            maxY = inMaxY;
+            nextBit = 0; 
+            nxtColorVal = 0;
+            numBitsToUse = inNumToUse; 
+        }
+        public void incrementNextTarget()
+        {
+            //increment the bit value
+            if (nextBit < numBitsToUse - 1)
+            {
+                nextBit++;
+            }
+            else
+            {
+                if (nxtColorVal < 2)
+                {
+                    nxtColorVal++;
+                }
+                else
+                {
+                    //get next coordinate
+                    if (currX < maxX)
+                    {
+                        currX++;
+                    }
+                    else
+                    {
+                        currX = 0;
+                        currY++;
+                    }
+                    nxtColorVal = 0; //reset to R
+                }
+                nextBit = 0; 
+            }
+        }
+
+        public void incrementCoordinate()
+        {
+            if (currX < maxX)
+            {
+                currX++;
+            }
+            else
+            {
+                currY++;
+                currX = 0; 
+            }
+        }
+    }
+}

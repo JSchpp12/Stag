@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmbedTracker.cs" />
     <Compile Include="Main_Page.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +55,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="stag_Bitmap.cs" />
     <EmbeddedResource Include="Main_Page.resx">
       <DependentUpon>Main_Page.cs</DependentUpon>
     </EmbeddedResource>

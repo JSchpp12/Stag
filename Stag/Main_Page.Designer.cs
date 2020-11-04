@@ -33,7 +33,7 @@
             System.Windows.Forms.Button Save;
             this.process1 = new System.Diagnostics.Process();
             this.txtBx_filePath = new System.Windows.Forms.TextBox();
-            this.pic_image = new System.Windows.Forms.PictureBox();
+            this.pic_orgImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,11 +47,15 @@
             this.lbl_maxMsgSize = new System.Windows.Forms.Label();
             this.lbl_msgEnc = new System.Windows.Forms.Label();
             this.rTxt_imageMsg = new System.Windows.Forms.RichTextBox();
+            this.lbl_origImage = new System.Windows.Forms.Label();
+            this.pic_modifiedImage = new System.Windows.Forms.PictureBox();
+            this.lbl_modifiedImage = new System.Windows.Forms.Label();
             btn_openFile = new System.Windows.Forms.Button();
             Save = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pic_image)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_orgImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.pnl_msg.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_modifiedImage)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_openFile
@@ -72,6 +76,7 @@
             Save.TabIndex = 11;
             Save.Text = "Save";
             Save.UseVisualStyleBackColor = true;
+            Save.Click += new System.EventHandler(this.Save_Click);
             // 
             // process1
             // 
@@ -92,13 +97,13 @@
             this.txtBx_filePath.TabIndex = 0;
             this.txtBx_filePath.Text = "File Path";
             // 
-            // pic_image
+            // pic_orgImage
             // 
-            this.pic_image.Location = new System.Drawing.Point(53, 80);
-            this.pic_image.Name = "pic_image";
-            this.pic_image.Size = new System.Drawing.Size(569, 275);
-            this.pic_image.TabIndex = 2;
-            this.pic_image.TabStop = false;
+            this.pic_orgImage.Location = new System.Drawing.Point(53, 80);
+            this.pic_orgImage.Name = "pic_orgImage";
+            this.pic_orgImage.Size = new System.Drawing.Size(569, 275);
+            this.pic_orgImage.TabIndex = 2;
+            this.pic_orgImage.TabStop = false;
             // 
             // contextMenuStrip1
             // 
@@ -114,7 +119,7 @@
             this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(720, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1258, 28);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -214,24 +219,54 @@
             this.rTxt_imageMsg.Text = "";
             this.rTxt_imageMsg.TextChanged += new System.EventHandler(this.rTxt_imageMsg_TextChanged);
             // 
+            // lbl_origImage
+            // 
+            this.lbl_origImage.AutoSize = true;
+            this.lbl_origImage.Location = new System.Drawing.Point(50, 60);
+            this.lbl_origImage.Name = "lbl_origImage";
+            this.lbl_origImage.Size = new System.Drawing.Size(111, 17);
+            this.lbl_origImage.TabIndex = 6;
+            this.lbl_origImage.Text = "Origional Image:";
+            // 
+            // pic_modifiedImage
+            // 
+            this.pic_modifiedImage.Location = new System.Drawing.Point(677, 80);
+            this.pic_modifiedImage.Name = "pic_modifiedImage";
+            this.pic_modifiedImage.Size = new System.Drawing.Size(569, 275);
+            this.pic_modifiedImage.TabIndex = 7;
+            this.pic_modifiedImage.TabStop = false;
+            // 
+            // lbl_modifiedImage
+            // 
+            this.lbl_modifiedImage.AutoSize = true;
+            this.lbl_modifiedImage.Location = new System.Drawing.Point(674, 60);
+            this.lbl_modifiedImage.Name = "lbl_modifiedImage";
+            this.lbl_modifiedImage.Size = new System.Drawing.Size(107, 17);
+            this.lbl_modifiedImage.TabIndex = 8;
+            this.lbl_modifiedImage.Text = "Modified Image:";
+            // 
             // Main_Page
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(720, 625);
+            this.ClientSize = new System.Drawing.Size(1258, 625);
+            this.Controls.Add(this.lbl_modifiedImage);
+            this.Controls.Add(this.pic_modifiedImage);
+            this.Controls.Add(this.lbl_origImage);
             this.Controls.Add(this.pnl_msg);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.pic_image);
+            this.Controls.Add(this.pic_orgImage);
             this.Controls.Add(btn_openFile);
             this.Controls.Add(this.txtBx_filePath);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main_Page";
             this.Text = "Image Steganography";
-            ((System.ComponentModel.ISupportInitialize)(this.pic_image)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_orgImage)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnl_msg.ResumeLayout(false);
             this.pnl_msg.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_modifiedImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -245,7 +280,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pic_image;
+        private System.Windows.Forms.PictureBox pic_orgImage;
         private System.Windows.Forms.TextBox txtBx_filePath;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Panel pnl_msg;
@@ -255,6 +290,9 @@
         private System.Windows.Forms.RichTextBox rTxt_imageMsg;
         private System.Windows.Forms.Label lbl_currChars;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbl_modifiedImage;
+        private System.Windows.Forms.PictureBox pic_modifiedImage;
+        private System.Windows.Forms.Label lbl_origImage;
     }
 }
 
