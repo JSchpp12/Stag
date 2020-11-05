@@ -35,6 +35,11 @@ namespace Stag
                 await Task.Run(embedMessageAsync); 
         }
 
+        public async Task DecodeImageAsync()
+        {
+              
+        }
+
         private void calculateSizes()
         {
             int totalNumPixels = orgBitmap.Width * orgBitmap.Height;
@@ -89,9 +94,6 @@ namespace Stag
 
         private void encode(BitArray encodeSource, EmbedTracker currentTracker, int size)
         {
-
-            //Byte charByte = Convert.ToByte(targetChar);  //get the byte version of the char
-            //BitArray charBits = new BitArray(new Byte[] { charByte });  //convert the byte char into a binary array
             int numEncoded = 0;
             Byte r, g, b; 
             while (numEncoded < size)
