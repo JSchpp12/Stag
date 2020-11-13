@@ -51,21 +51,22 @@ namespace Stag
         public async Task decodeMessageAsync()
         {
             Debug.WriteLine("Beginning Decode");
-            int numBitsUsedToEncode;
-            int numBitsUsed = 0;
+            int numBitsUsedToEncode = 0; 
             bool testComplete = false;
+            EmbedTracker decodingTracker, testTracker;
+            List<char> messageChars = new List<char>();
 
             //need to figure out how many bits are used....
             for (int i = 1; i <= 8; i++)
             {
-                EmbedTracker testTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, i);
+                testTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, i);
                 for (int j = 0; j < msgStart.Length; j++)
                 {
-                    var currentChar = Decode(i, testTracker);
-                    if (currentChar == msgStart[j] && j == msgStart.Length - 1)
+                    var testChar = Decode(i, testTracker);
+                    if (testChar == msgStart[j] && j == msgStart.Length - 1)
                     {
                         testComplete = true;
-                        numBitsUsed = i;
+                        numBitsUsedToEncode = i;
                     }
                 }
                 if (testComplete)
@@ -78,6 +79,33 @@ namespace Stag
                 Exception ex = new Exception("Unable to decode message from image");
                 throw ex;
             }
+
+            //create the tracker for the actual decoding portion
+            decodingTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, numBitsUsedToEncode);
+
+            //read the first two characters in the message
+            char currentChar = Decode(numBitsUsedToEncode, decodingTracker); 
+            char nextChar = Decode(numBitsUsedToEncode, decodingTracker); 
+            int numDecoded = 0;
+
+            for (int i = 0; i<msgStart.Length; i++)
+            {
+                //spin through the beginning of message
+                currentChar = nextChar; 
+                nextChar = Decode(numBitsUsedToEncode, decodingTracker); 
+            }
+
+            do
+            {
+                messageChars.Add(currentChar); 
+                currentChar = nextChar;
+                nextChar = Decode(numBitsUsedToEncode, decodingTracker);
+                numDecoded++;
+            } while (!(currentChar == msgEnd.ElementAt(0) && nextChar == msgEnd.ElementAt(1))); 
+
+            Debug.WriteLine("Decoding Complete - " + numDecoded);
+
+            Message = new string(messageChars.ToArray()); 
         }
 
         public async Task embedMessageAsync()
@@ -95,14 +123,6 @@ namespace Stag
                 encode(charBits, embedTracker, 8);
             }
 
-            //encode the number of bits used per pixel for encoding -- this will be used for decoding (will only take up 4 bits no matter what as 8 is max)
-            //string sBits = Convert.ToString(numBitsUse, 2);
-            //int[] bits = sBits.PadLeft(4, '0')
-            //                  .Select(x => int.Parse(x.ToString()))
-            //                  .ToArray();
-            //BitArray arrayNumUsed = new BitArray(4);
-            //encode(arrayNumUsed, embedTracker, 4);
-
             Debug.WriteLine("Embedding message");
             //encode actual message 
             try
@@ -110,9 +130,9 @@ namespace Stag
                 var messageBytes = stringToBytes(Message);
                 for (int k = 0; k < messageBytes.Length; k++)
                 {
-                    //char current = Message.ElementAt(k);
-                    //BitArray charArray = charToBitArray(current);
-                    BitArray charArray = new BitArray(messageBytes[k]);
+                    char current = (char)messageBytes[k]; 
+                    BitArray charArray = charToBitArray(current);
+                    //BitArray charArray = new BitArray(messageBytes[k]);
                     encode(charArray, embedTracker, 8);
                 }
             }
