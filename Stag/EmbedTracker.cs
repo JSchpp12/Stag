@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,40 +22,42 @@ namespace Stag
         {
             currX = startX;
             currY = startY;
-            maxX = inMaxX;
-            maxY = inMaxY;
+            maxX = inMaxX - 1;
+            maxY = inMaxY - 1;
             nextBit = 0; 
             nxtColorVal = 0;
             numBitsToUse = inNumToUse; 
         }
         public void incrementNextTarget()
         {
-            //increment the bit value
-            if (nextBit < numBitsToUse - 1)
+            try
             {
-                nextBit++;
-            }
-            else
-            {
-                if (nxtColorVal < 2)
+                //increment the bit value
+                if (nextBit < numBitsToUse - 1)
                 {
-                    nxtColorVal++;
+                    nextBit++;
                 }
                 else
                 {
-                    //get next coordinate
-                    if (currX < maxX)
+                    if (nxtColorVal < 2)
                     {
-                        currX++;
+                        nxtColorVal++;
                     }
                     else
                     {
-                        currX = 0;
-                        currY++;
+                        if (currX < maxX)
+                        {
+                            currX++;
+                        }
+                        else
+                        {
+                            currX = 0;
+                            currY++;
+                        }
+                        nxtColorVal = 0; //reset to R
                     }
-                    nxtColorVal = 0; //reset to R
+                    nextBit = 0;
                 }
-                nextBit = 0; 
             }
         }
 
