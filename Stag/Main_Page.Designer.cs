@@ -50,6 +50,8 @@
             this.lbl_origImage = new System.Windows.Forms.Label();
             this.pic_modifiedImage = new System.Windows.Forms.PictureBox();
             this.lbl_modifiedImage = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             btn_openFile = new System.Windows.Forms.Button();
             Save = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pic_orgImage)).BeginInit();
@@ -245,11 +247,31 @@
             this.lbl_modifiedImage.TabIndex = 8;
             this.lbl_modifiedImage.Text = "Modified Image:";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1160, 376);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(878, 438);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(100, 96);
+            this.richTextBox1.TabIndex = 10;
+            this.richTextBox1.Text = "";
+            // 
             // Main_Page
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1258, 625);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.lbl_modifiedImage);
             this.Controls.Add(this.pic_modifiedImage);
             this.Controls.Add(this.lbl_origImage);
@@ -293,6 +315,8 @@
         private System.Windows.Forms.Label lbl_modifiedImage;
         private System.Windows.Forms.PictureBox pic_modifiedImage;
         private System.Windows.Forms.Label lbl_origImage;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

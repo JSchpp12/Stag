@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -28,16 +30,9 @@ namespace Stag
             calculateSizes(); 
         }
 
-        public async Task EmbedMessageAsync()
+        public stag_Bitmap(Bitmap image)
         {
-            //call the embedding process from here
-            if (Message != string.Empty)
-                await Task.Run(embedMessageAsync); 
-        }
-
-        public async Task DecodeImageAsync()
-        {
-              
+            orgBitmap = image; 
         }
 
         private void calculateSizes()
@@ -52,13 +47,27 @@ namespace Stag
             MaxMsgSize = (int)floored - 5; 
         }
 
-        private async Task embedMessageAsync()
+        //read the message out of the target file 
+        public async Task decodeMessageAsync()
+        {
+            Debug.WriteLine("Beginning Decode");
+            int numBitsUsedToEncode;
+            int testBits = 0; 
+
+            //need to figure out how many bits are used....
+            for (int i = 1; i<=8; i++)
+            {
+                TestBitsUsed(i);
+            }
+        }
+
+        public async Task embedMessageAsync()
         {
             BitArray charBits; 
             EmbedTracker embedTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, numBitsUse);
-            newBitmap = orgBitmap; 
-            var numEncoded = 0;
+            newBitmap = orgBitmap;
 
+            Debug.WriteLine("Embedding beginning of message values"); 
             //encode start of message flag 
             for (int i = 0; i < msgStart.Length; i++)
             {
@@ -73,8 +82,9 @@ namespace Stag
                               .Select(x => int.Parse(x.ToString()))
                               .ToArray();
             BitArray arrayNumUsed = new BitArray(4);
-            encode(arrayNumUsed, embedTracker, 4); 
+            encode(arrayNumUsed, embedTracker, 4);
 
+            Debug.WriteLine("Embedding message"); 
             //encode actual message 
             for (int k = 0; k < Message.Length; k++)
             {
@@ -83,6 +93,7 @@ namespace Stag
                 encode(charArray, embedTracker, 8); 
             }
 
+            Debug.WriteLine("Embedding end of message values");
             //encode end of message flag 
             for (int m = 0; m < msgEnd.Length; m++)
             {
@@ -133,6 +144,7 @@ namespace Stag
             }
         }
 
+        //store the information in the source array into the target array
         private void store(BitArray targetArray, BitArray sourceArray, EmbedTracker tracker, int numUsed)
         {
             //if they select 3 bits to use
@@ -148,6 +160,45 @@ namespace Stag
                 tracker.incrementNextTarget(); 
                 numUsed++; 
             }
+        }
+
+        //test the number passed into this method against the image. Returns true if the number of bits tested returns a valid message header
+        private bool TestBitsUsed(int numBitsTest)
+        {
+            EmbedTracker testTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, numBitsTest); 
+            Byte r, g, b;
+            int numRead = 0; 
+
+            //try and read for the first character of the start of message which should be at the beginning of the image
+            while (numRead < 8)
+            {
+                int processingX = testTracker.currX;
+                int processingY = testTracker.currX; 
+                var currPixel = orgBitmap.GetPixel(processingX, processingY);
+                BitArray currentByte = new BitArray(8);
+                BitArray dataByte = new BitArray(8); 
+
+                switch(testTracker.nxtColorVal){
+                    case 0:
+                        currentByte = new BitArray(new byte[] { currPixel.R });
+                        break;
+                    case 1:
+                        currentByte = new BitArray(new byte[] { currPixel.G });
+                        break;
+                    case 2:
+                        currentByte = new BitArray(new byte[] { currPixel.B });
+                        break; 
+                }
+                //this is not correct might be an encoding issue
+                for (int i = 0; i < numBitsTest; i++)
+                {
+                    dataByte[numRead] = currentByte[i];
+                    numRead++; 
+                }
+                testTracker.incrementNextTarget();  
+            }
+
+            return false; 
         }
 
         private byte ConvertToByte(BitArray bits)

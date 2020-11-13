@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
@@ -68,7 +69,8 @@ namespace Stag
         private void Save_Click(object sender, EventArgs e)
         {
             rTxt_imageMsg.Enabled = false;
-            startEmbed(); 
+            startEmbedAsync();
+            
         }
         
         private void rTxt_imageMsg_TextChanged(object sender, EventArgs e)
@@ -76,12 +78,34 @@ namespace Stag
             lbl_currChars.Text = rTxt_imageMsg.Text.Length.ToString();
         }
 
-        private async Task startEmbed()
+        private async Task startEmbedAsync()
         {
-            sBitMap.Message = rTxt_imageMsg.Text; 
-            await Task.Run(sBitMap.EmbedMessageAsync);
+            sBitMap.Message = rTxt_imageMsg.Text;
+            Debug.WriteLine("Beginning Encode"); 
+            await Task.Run(sBitMap.embedMessageAsync);
             rTxt_imageMsg.Enabled = true;
-            pic_modifiedImage.Image = sBitMap.newBitmap; 
+            Debug.WriteLine("Displaying modified image");
+            pic_modifiedImage.Image = sBitMap.newBitmap;
+        }
+
+        private async Task startDecodeAsync()
+        {
+            Bitmap modifiedBitmap = new Bitmap(pic_modifiedImage.Image); 
+            stag_Bitmap decodeTest = new stag_Bitmap(modifiedBitmap);
+            try
+            {
+                await Task.Run(decodeTest.decodeMessageAsync);
+            }catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            richTextBox1.Text = decodeTest.Message;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            startDecodeAsync(); 
         }
     }
 }
