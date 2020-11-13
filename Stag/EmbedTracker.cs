@@ -30,34 +30,31 @@ namespace Stag
         }
         public void incrementNextTarget()
         {
-            try
+            //increment the bit value
+            if (nextBit < numBitsToUse - 1)
             {
-                //increment the bit value
-                if (nextBit < numBitsToUse - 1)
+                nextBit++;
+            }
+            else
+            {
+                if (nxtColorVal < 2)
                 {
-                    nextBit++;
+                    nxtColorVal++;
                 }
                 else
                 {
-                    if (nxtColorVal < 2)
+                    if (currX < maxX)
                     {
-                        nxtColorVal++;
+                        currX++;
                     }
                     else
                     {
-                        if (currX < maxX)
-                        {
-                            currX++;
-                        }
-                        else
-                        {
-                            currX = 0;
-                            currY++;
-                        }
-                        nxtColorVal = 0; //reset to R
+                        currX = 0;
+                        currY++;
                     }
-                    nextBit = 0;
+                    nxtColorVal = 0; //reset to R
                 }
+                nextBit = 0;
             }
         }
 
