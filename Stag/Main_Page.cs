@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -32,11 +33,12 @@ namespace Stag
             //open a file for import
             var fileContent = string.Empty;
             var filePath = string.Empty;
+            Image currentImage; 
 
             using (OpenFileDialog fileDialog = new OpenFileDialog())
             {
                 fileDialog.InitialDirectory = "c:\\";
-                fileDialog.Filter = "Image Files (*.jpg *.png)|*.jpg | All files (*.*)|*.*";
+                fileDialog.Filter = "Image Files (*.jpg)|*.jpg | All files (*.*)|*.*";
                 fileDialog.FilterIndex = 2;
                 fileDialog.RestoreDirectory = true; 
 
@@ -48,11 +50,21 @@ namespace Stag
                         txtBx_filePath.Text = filePath;
                         using (var bmpStream = System.IO.File.Open(filePath, System.IO.FileMode.Open))
                         {
-                            Image image = Image.FromStream(bmpStream);
-                            var currentImageBitMap = new Bitmap(image);
-                            pic_orgImage.Image = image;
+                            currentImage = Image.FromStream(bmpStream);
+                            var currentImageBitMap = new Bitmap(currentImage);
+                            pic_orgImage.Image = currentImage;
                             sBitMap = new stag_Bitmap(currentImageBitMap, numBitsUse);
                         }
+
+                        if (sBitMap.TestForMessage())
+                        {
+                            var confirmResult = MessageBox.Show("A message has been detected in the image that was opened.", "Would you like to try and decode the message?",  MessageBoxButtons.YesNo); 
+                            if (confirmResult == DialogResult.Yes)
+                            {
+                                startDecodeAsync(currentImage); 
+                            }
+                        }
+
                         pnl_msg.Visible = true;
                         lbl_maxMsgSizeVal.Text = sBitMap.MaxMsgSize.ToString();
                     }
@@ -88,24 +100,77 @@ namespace Stag
             pic_modifiedImage.Image = sBitMap.newBitmap;
         }
 
-        private async Task startDecodeAsync()
+        //decode the message contained in the message and set the message to the message box
+        private async Task startDecodeAsync(Image image)
         {
-            Bitmap modifiedBitmap = new Bitmap(pic_modifiedImage.Image); 
+            Bitmap modifiedBitmap = new Bitmap(image); 
             stag_Bitmap decodeTest = new stag_Bitmap(modifiedBitmap);
             try
             {
                 await Task.Run(decodeTest.decodeMessageAsync);
+                rTxt_imageMsg.Text = decodeTest.Message; 
             }catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-
-            richTextBox1.Text = decodeTest.Message;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            startDecodeAsync(); 
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save Location";
+            saveFileDialog.CheckPathExists = true;
+            saveFileDialog.RestoreDirectory = true; 
+            saveFileDialog.Filter = "Image Files (*.bmp)|*.bmp";
+            if(pic_modifiedImage.Image != null)
+            {
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var name = saveFileDialog.FileName;
+                    stag_Bitmap testMap = new stag_Bitmap(sBitMap.newBitmap);
+                    testMap.TestForMessage(); 
+                    sBitMap.newBitmap.Save(name, ImageFormat.Bmp); 
+                }
+            }
+            else
+            {
+                //show alert that there is no file to save
+            }
+        }
+
+        private void saveImage(Bitmap image, string name)
+        {
+
+            ImageCodecInfo codecInfo;
+            System.Drawing.Imaging.Encoder encoder;
+            EncoderParameter encoderParameter;
+            EncoderParameters encoderParameters;
+
+            encoder = System.Drawing.Imaging.Encoder.Quality; 
+            codecInfo = GetEncoderInfo("image/jpeg");
+            encoderParameters = new EncoderParameters(1);
+
+            encoderParameter = new EncoderParameter(encoder, 100L);
+            encoderParameters.Param[0] = encoderParameter;
+            image.Save(name, codecInfo, encoderParameters); 
+        }
+
+        private static ImageCodecInfo GetEncoderInfo(String mimeType)
+        {
+            int j;
+            ImageCodecInfo[] encoders;
+            encoders = ImageCodecInfo.GetImageEncoders();
+            for (j = 0; j < encoders.Length; ++j)
+            {
+                if (encoders[j].MimeType == mimeType)
+                    return encoders[j];
+            }
+            return null;
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

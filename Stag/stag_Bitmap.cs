@@ -47,6 +47,17 @@ namespace Stag
             MaxMsgSize = (int)floored - 5;
         }
 
+        public bool TestForMessage()
+        {
+            for (int i = 1; i <= 8; i++)
+            {
+                if (verifyMessageHeader(i))
+                    return true; 
+            }
+            return false; 
+
+        }
+
         //read the message out of the target file 
         public async Task decodeMessageAsync()
         {
@@ -225,6 +236,23 @@ namespace Stag
                 Debug.WriteLine(ex.Message);
             }
 
+        }
+
+        private bool verifyMessageHeader(int numBits)
+        {
+            bool testComplete = false; 
+
+            var testTracker = new EmbedTracker(0, 0, orgBitmap.Width, orgBitmap.Height, numBits);
+            var testChar = Decode(numBits, testTracker);
+            if (testChar == msgStart[0])
+            {
+                var secondChar = Decode(numBits, testTracker); 
+                if (secondChar == msgStart[1])
+                {
+                    return true; 
+                }
+            }
+            return false; 
         }
 
         //test the number passed into this method against the image. Returns true if the number of bits tested returns a valid message header
