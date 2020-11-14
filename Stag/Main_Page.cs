@@ -32,8 +32,9 @@ namespace Stag
             //open a file for import
             var fileContent = string.Empty;
             var filePath = string.Empty;
-            Image currentImage; 
+            Image currentImage;
 
+            rTxt_imageMsg.Text = string.Empty;
             using (OpenFileDialog fileDialog = new OpenFileDialog())
             {
                 fileDialog.InitialDirectory = "c:\\";

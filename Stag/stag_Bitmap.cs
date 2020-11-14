@@ -292,8 +292,16 @@ namespace Stag
                     //this is not correct might be an encoding issue
                     for (int i = 0; i < numBitsUse; i++)
                     {
-                        dataByte[numRead] = currentByte[i];
-                        numRead++;
+                        if (numRead < 8)
+                        {
+                            dataByte[numRead] = currentByte[i];
+                            numRead++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+
                     }
                     tracker.incrementNextTarget();
                 }
