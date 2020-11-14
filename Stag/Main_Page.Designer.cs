@@ -70,7 +70,7 @@
             // 
             // Save
             // 
-            Save.Location = new System.Drawing.Point(410, 41);
+            Save.Location = new System.Drawing.Point(827, 41);
             Save.Margin = new System.Windows.Forms.Padding(2);
             Save.Name = "Save";
             Save.Size = new System.Drawing.Size(64, 24);
@@ -138,7 +138,7 @@
             // saveToolStripMenuItem1
             // 
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
             this.saveToolStripMenuItem1.Text = "Save Image";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
             // 
@@ -161,14 +161,14 @@
             this.pnl_msg.Location = new System.Drawing.Point(22, 334);
             this.pnl_msg.Margin = new System.Windows.Forms.Padding(2);
             this.pnl_msg.Name = "pnl_msg";
-            this.pnl_msg.Size = new System.Drawing.Size(508, 159);
+            this.pnl_msg.Size = new System.Drawing.Size(913, 223);
             this.pnl_msg.TabIndex = 5;
             this.pnl_msg.Visible = false;
             // 
             // lbl_currChars
             // 
             this.lbl_currChars.AutoSize = true;
-            this.lbl_currChars.Location = new System.Drawing.Point(460, 136);
+            this.lbl_currChars.Location = new System.Drawing.Point(878, 209);
             this.lbl_currChars.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_currChars.Name = "lbl_currChars";
             this.lbl_currChars.Size = new System.Drawing.Size(13, 13);
@@ -178,7 +178,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(410, 135);
+            this.label1.Location = new System.Drawing.Point(828, 208);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
@@ -220,7 +220,7 @@
             this.rTxt_imageMsg.Location = new System.Drawing.Point(2, 41);
             this.rTxt_imageMsg.Margin = new System.Windows.Forms.Padding(2);
             this.rTxt_imageMsg.Name = "rTxt_imageMsg";
-            this.rTxt_imageMsg.Size = new System.Drawing.Size(404, 109);
+            this.rTxt_imageMsg.Size = new System.Drawing.Size(822, 180);
             this.rTxt_imageMsg.TabIndex = 10;
             this.rTxt_imageMsg.Text = "";
             this.rTxt_imageMsg.TextChanged += new System.EventHandler(this.rTxt_imageMsg_TextChanged);

@@ -18,8 +18,7 @@ namespace Stag
         public string Message = string.Empty;
         public Bitmap newBitmap;
         private Bitmap orgBitmap;
-        private int numPixelsNeededPerChar = 0;
-        private int numBitsUse;
+        private int numBitsUse = 1;
         private const string msgStart = "!*";
         private const string msgEnd = "*!";
 
@@ -33,6 +32,12 @@ namespace Stag
         public stag_Bitmap(Bitmap image)
         {
             orgBitmap = image;
+        }
+
+        public void setNumBits(int inBits)
+        {
+            this.numBitsUse = inBits;
+            calculateSizes(); 
         }
 
         private void calculateSizes()

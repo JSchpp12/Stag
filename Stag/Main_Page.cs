@@ -18,7 +18,6 @@ namespace Stag
     public partial class Main_Page : Form
     {
         private int numBitsUse = 1; 
-        private int numOfPixelsNeeded = 0;  //number of pixels needed to encode one char
         private stag_Bitmap sBitMap; 
 
         public Main_Page()
@@ -170,7 +169,12 @@ namespace Stag
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var options = new Options(this.numBitsUse);
+            if (options.ShowDialog(this) == DialogResult.OK)
+            {
+                numBitsUse = options.numBits;
+                sBitMap.setNumBits(numBitsUse); 
+            }
         }
     }
 }
