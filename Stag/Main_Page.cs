@@ -34,6 +34,7 @@ namespace Stag
             var filePath = string.Empty;
             Image currentImage;
 
+            pic_modifiedImage.Image = null;
             rTxt_imageMsg.Text = string.Empty;
             using (OpenFileDialog fileDialog = new OpenFileDialog())
             {
@@ -81,6 +82,7 @@ namespace Stag
         private void Save_Click(object sender, EventArgs e)
         {
             rTxt_imageMsg.Enabled = false;
+            pic_modifiedImage.Image = null; 
             startEmbedAsync();
             
         }
@@ -92,6 +94,8 @@ namespace Stag
 
         private async Task startEmbedAsync()
         {
+            var currentImageBitMap = new Bitmap(pic_orgImage.Image);
+            sBitMap = new stag_Bitmap(currentImageBitMap, numBitsUse);
             sBitMap.Message = rTxt_imageMsg.Text;
             Debug.WriteLine("Beginning Encode"); 
             await Task.Run(sBitMap.embedMessageAsync);
